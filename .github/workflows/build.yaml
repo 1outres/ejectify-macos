@@ -1,0 +1,21 @@
+name: CI
+
+on: [push] # git push をトリガーとする
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Select Xcode version
+      run: sudo xcode-select -s '/Applications/Xcode_15.4.app/Contents/Developer'
+    - name: Show Xcode version
+      run: xcodebuild -version
+    - name: Build
+      run: xcodebuild -exportArchive -archivePath build/Ejectify.xcarchive -exportPath build/pkg -exportOptionsPlist export-options.plist
+    - uses: actions/upload-artifact@v4
+      with:
+        name: Ejectify.app
+        path: build/pkg/Ejectify.app
